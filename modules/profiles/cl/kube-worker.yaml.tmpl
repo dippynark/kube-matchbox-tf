@@ -1,0 +1,70 @@
+---
+systemd:
+  units:
+    - name: kubelet.path
+      enable: true
+      contents: |
+        [Unit]
+        Description=Watch for kubeconfig
+        [Path]
+        PathExists=/etc/kubernetes/kubeconfig
+        PathExists=/etc/kubernetes/tls/ca.crt
+        [Install]
+        WantedBy=multi-user.target
+    - name: kubelet.service
+      enable: true
+      contents: |
+        [Unit]
+        Description=Kubelet via Hyperkube ACI
+        [Service]
+        Environment="RKT_RUN_ARGS=--uuid-file-save=/var/run/kubelet-pod.uuid \
+          --volume=resolv,kind=host,source=/etc/resolv.conf \
+          --mount volume=resolv,target=/etc/resolv.conf \
+          --volume etc-cni,kind=host,source=/etc/cni \
+          --mount volume=etc-cni,target=/etc/cni \
+          --volume opt-cni,kind=host,source=/opt/cni \
+          --mount volume=opt-cni,target=/opt/cni \
+          --volume var-log,kind=host,source=/var/log \
+          --mount volume=var-log,target=/var/log \
+          --insecure-options=image"
+        Environment=KUBELET_IMAGE_TAG={{.kubelet_image_tag}}
+        Environment=KUBELET_IMAGE_URL={{.kubelet_image_url}}
+        ExecStartPre=/bin/mkdir -p /etc/kubernetes/manifests
+        ExecStartPre=/bin/mkdir -p /etc/cni/net.d
+        ExecStartPre=/bin/mkdir -p /opt/cni
+        ExecStartPre=-/usr/bin/rkt rm --uuid-file=/var/run/kubelet-pod.uuid
+        ExecStart=/usr/lib/coreos/kubelet-wrapper \
+          --kubeconfig=/etc/kubernetes/kubeconfig \
+          --require-kubeconfig \
+          --client-ca-file=/etc/kubernetes/tls/ca.crt \
+          --anonymous-auth=false \
+          --cni-conf-dir=/etc/cni/net.d \
+          --network-plugin=cni \
+          --lock-file=/var/run/lock/kubelet.lock \
+          --exit-on-lock-contention \
+          --pod-manifest-path=/etc/kubernetes/manifests \
+          --allow-privileged \
+          --hostname-override={{.domain_name}} \
+          --node-labels=node-role.kubernetes.io/worker \
+          --cluster_dns={{.k8s_dns_service_ip}} \
+          --cluster_domain=cluster.local
+        ExecStop=-/usr/bin/rkt stop --uuid-file=/var/run/kubelet-pod.uuid
+        Restart=always
+        RestartSec=10
+        [Install]
+        WantedBy=multi-user.target
+
+storage:
+  files:
+    - path: /etc/hostname
+      filesystem: root
+      mode: 0644
+      contents:
+        inline:
+          {{.domain_name}}
+
+passwd:
+  users:
+    - name: core
+      ssh_authorized_keys:
+        - {{.ssh_authorized_key}}

@@ -1,0 +1,28 @@
+# Matchbox
+matchbox_http_endpoint = "http://matchbox.example.com:8080"
+matchbox_rpc_endpoint = "matchbox.example.com:8081"
+
+# Cluster
+cluster_name = "cluster"
+
+# CoreOS
+container_linux_version = "1353.7.0"
+container_linux_channel = "stable"
+container_linux_oem = ""
+
+# Machines
+controller_names = ["node1", "node2", "node3"]
+controller_macs = ["52:54:00:a1:9c:ae", "52:54:00:b2:2f:86", "52:54:00:c3:61:77"]
+controller_domains = ["node1.example.com", "node2.example.com", "node3.example.com"]
+worker_names = ["node4", "node5", "node6"]
+worker_macs = ["52:54:00:d4:99:c7", "52:54:00:e5:99:c7", "52:54:00:f6:99:c7"]
+worker_domains = ["node4.example.com", "node5.example.com", "node6.example.com"]
+
+# Assets
+assets_dir = "assets"
+
+# PKI
+ssh_authorized_key = "ssh-rsa <PUBLIC-KEY>"
+
+# API Server
+kube_apiserver_url = "https://cluster.example.com:6443"

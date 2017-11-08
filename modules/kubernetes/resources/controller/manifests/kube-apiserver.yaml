@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kube-apiserver
+  namespace: kube-system
+  labels:
+    components: kube-apiserver
+    tier: control-plane
+spec:
+  hostNetwork: true
+  containers:
+  - name: kube-apiserver
+    image: ${hyperkube_image}
+    command:
+    - /hyperkube
+    - apiserver
+    - --insecure-bind-address=127.0.0.1
+    - --admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota
+    - --service-cluster-ip-range=${service_cidr}
+    - --service-account-key-file=/etc/kubernetes/tls/service-account.key
+    - --client-ca-file=/etc/kubernetes/tls/ca.crt
+    - --tls-cert-file=/etc/kubernetes/tls/apiserver.crt
+    - --tls-private-key-file=/etc/kubernetes/tls/apiserver.key
+    - --secure-port=${secure_port}
+    - --allow-privileged
+    - --kubelet-preferred-address-types=InternalIP,Hostname,ExternalIP
+    - --anonymous-auth=false
+    - --etcd-servers=http://127.0.0.1:2379
+    - --authorization-mode=RBAC
+    - --feature-gates=StreamingProxyRedirects=true
+    - --runtime-config=batch/v2alpha1
+    - --storage-backend=etcd3
+    - --v=${verbosity}
+    - --kubelet-client-certificate=/etc/kubernetes/tls/apiserver.crt
+    - --kubelet-client-key=/etc/kubernetes/tls/apiserver.key
+    ports:
+    - containerPort: 8080
+    - containerPort: 6443
+    resources:
+      requests:
+        cpu: 250m
+    volumeMounts:
+    - name: etckubernetes
+      readOnly: true
+      mountPath: /etc/kubernetes
+    - name: etcsslcerts
+      readOnly: true
+      mountPath: /etc/ssl/certs
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 8080
+        host: 127.0.0.1
+      initialDelaySeconds: 15
+      timeoutSeconds: 15
+      failureThreshold: 8
+  volumes:
+  - name: etckubernetes
+    hostPath:
+      path: /etc/kubernetes
+  - name: etcsslcerts
+    hostPath:
+      path: /etc/ssl/certs

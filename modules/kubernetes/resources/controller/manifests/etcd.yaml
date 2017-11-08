@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: etcd
+  namespace: kube-system
+  labels:
+    component: etcd
+    tier: control-plane
+spec:
+  hostNetwork: true
+  containers:
+  - name: etcd
+    image: ${etcd_image}
+    ports:
+    - name: peer
+      containerPort: 2380
+    - name: peer2
+      containerPort: 4001
+    - name: client
+      containerPort: 2379
+    resources:
+      requests:
+        cpu: 200m
+        memory: 64Mi
+    volumeMounts:
+    - name: etcd-data
+      mountPath: /var/lib/etcd/data
+    env:
+    - name: ETCD_NAME
+      value: $${etcd_name}
+    - name: ETCD_INITIAL_CLUSTER
+      value: ${etcd_initial_cluster}
+    - name: ETCD_INITIAL_CLUSTER_STATE
+      value: new
+    - name: INITIAL_CLUSTER_TOKEN
+      value: ${etcd_initial_cluster_token}
+    - name: ETCD_ADVERTISE_CLIENT_URLS
+      value: http://$${domain_name}:2379
+    - name: ETCD_INITIAL_ADVERTISE_PEER_URLS
+      value: http://$${domain_name}:2380
+    - name: ETCD_LISTEN_CLIENT_URLS
+      value: http://0.0.0.0:2379
+    - name: ETCD_LISTEN_PEER_URLS
+      value: http://0.0.0.0:2380
+    - name: ETCD_STRICT_RECONFIG_CHECK
+      value: "true"
+    - name: ETCD_DATA_DIR
+      value: /var/lib/etcd/data
+    - name: ETCD_PEER_AUTO_TLS
+      value: "true"
+  volumes:
+  - name: etcd-data
+    hostPath:
+      path: /var/lib/etcd/data
