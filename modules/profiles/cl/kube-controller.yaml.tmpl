@@ -1,4 +1,3 @@
----
 systemd:
   units:
     - name: kubelet.path
@@ -60,7 +59,7 @@ storage:
       filesystem: root
       mode: 0644
       contents:
-        inline:
+        inline: |
           {{.domain_name}}
 
 passwd:

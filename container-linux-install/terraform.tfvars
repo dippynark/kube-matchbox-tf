@@ -1,0 +1,3 @@
+matchbox_http_endpoint = "http://matchbox.lukeaddison.co.uk:8080"
+matchbox_rpc_endpoint = "matchbox.lukeaddison.co.uk:8081"
+ssh_authorized_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC2hwKkGEA6O9p2UzSPQNHPZq3XLBVkZdVGjpKo9vZwjx23TRApEYbjyYeLooruPOrXgPmVIgvHQF/D9/7oJCL0osmD9Q7eLntxNJSB2WGnIx3ugiG76U376OfobESKi4k5oQ9KA5hHorA1BZvog+DTPMKuQhspBHhe+Tyi2doLawbndHb8KPuf8qIqS36nLf0sBB1+GxFTAnGe83uVhtIEhmnPOIe3NRLyvJMoG/nIOYNDMrhNdWtVbOZbr3tOGSbiTkgMZTUGJiJJDorkRfW/NiDv/nTOtWFIVUusfXIDLUXkUB9af3qKAHcKwNpl3gtm5F0p7xh0Xj+30fMBkq7l luke@Lukes-MacBook-Pro.local"
