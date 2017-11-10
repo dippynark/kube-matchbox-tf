@@ -1,6 +1,6 @@
 # kube-matchbox-tf
 
-This project is for deploying Kubernetes to bare metal environments using matchbox and Terraform. The following components and add-ons are deployed with the cluster:
+This project is for deploying [Container Linux][8] and [Kubernetes][9] to bare metal environments using [matchbox][10] and [Terraform][1]. The following components and add-ons are deployed with the cluster:
 
 - etcd
 - kube-apiserver
@@ -20,15 +20,15 @@ Your cluster nodes need to be configured to [PXE boot][4].
 
 ### Terraform 
 
-Terraform is used to configure matchbox programmatically. The latest version can be downloaded from the Terraform [website][1].
+Terraform is used to configure `matchbox` programmatically. The latest version can be downloaded from the Terraform [website][1].
 
 ### Docker
 
-Docker is required to build the local development environment. You can alternatively run everything directly on your local machine.
+[Docker][7] is required to build the local development environment. You can alternatively run everything directly on your local machine.
 
 ### Network
 
-Matchbox is used to PXE boot your VMs. To set up your network for this, follow CoreOS's [network setup][2] tutorial. It is required that CoreOS is [cached][3] by default. You can download CoreOS using the [get_coreos][5] script in the [matchbox][6] repository. If you do not want to do this, make sure to use the `container-linux-install` profile instead of the `cached-container-linux-install` profile. These profiles can be found in the profiles Terraform module.
+`matchbox` is used to PXE boot your VMs. To set up your network for this, follow CoreOS's [network setup][2] tutorial. It is required that Container Linux is [cached][3] by default. You can download Container Linux using the [get_coreos][5] script in the [matchbox][6] repository. If you do not want to use a cached version of Container Linux, make sure to use the `container-linux-install` profile instead of the `cached-container-linux-install` profile. These profiles can be found in the profiles Terraform module.
 
 ## Quickstart
 
@@ -48,3 +48,7 @@ make docker_tf_apply
 [4]: https://coreos.com/os/docs/latest/booting-with-ipxe.html
 [5]: https://github.com/coreos/matchbox/blob/master/scripts/get-coreos
 [6]: https://github.com/coreos/matchbox
+[7]: https://www.docker.com/
+[8]: https://coreos.com/os/docs/latest/
+[9]: https://kubernetes.io/docs/home/
+[10]: https://coreos.com/matchbox/docs/latest/
