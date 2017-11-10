@@ -6,6 +6,10 @@ output "container-linux-install" {
   value = "${matchbox_profile.container-linux-install.name}"
 }
 
+output "simple-install" {
+  value = "${matchbox_profile.kube-controller.name}"
+}
+
 output "kube-controller" {
   value = "${matchbox_profile.kube-controller.name}"
 }

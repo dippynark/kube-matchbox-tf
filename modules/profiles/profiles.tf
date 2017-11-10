@@ -37,6 +37,12 @@ resource "matchbox_profile" "container-linux-install" {
   container_linux_config = "${file("${path.module}/cl/container-linux-install.yaml.tmpl")}"
 }
 
+// Create a simple profile which just sets an SSH authorized_key
+resource "matchbox_profile" "simple-install" {
+  name                   = "simple-install"
+  container_linux_config = "${file("${path.module}/cl/simple.yaml.tmpl")}"
+}
+
 // Self-hosted Kubernetes controller profile
 resource "matchbox_profile" "kube-controller" {
   name                   = "kube-controller"

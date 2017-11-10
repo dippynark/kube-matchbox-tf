@@ -33,11 +33,11 @@ variable "container_images" {
     kubedns                     = "gcr.io/google_containers/k8s-dns-kube-dns-amd64:1.14.7"
     kubednsmasq                 = "gcr.io/google_containers/k8s-dns-dnsmasq-nanny-amd64:1.14.7"
     kubedns_sidecar             = "gcr.io/google_containers/k8s-dns-sidecar-amd64:1.14.7"
-    kube_dashboard              = "gcr.io/google_containers/kubernetes-dashboard-amd64:v1.6.1"
-    calico_node                 = "quay.io/calico/node:v2.5.1"
-    calico_cni                  = "quay.io/calico/cni:v1.10.0"
-    calico_policy_controller    = "quay.io/calico/kube-policy-controller:v0.7.0"
-    heapster                    = "gcr.io/google_containers/heapster:v1.3.0"
+    kube_dashboard              = "gcr.io/google_containers/kubernetes-dashboard-amd64:v1.7.1"
+    calico_node                 = "quay.io/calico/node:v2.6.2-8-g300695e"
+    calico_cni                  = "quay.io/calico/cni:v1.11.0-20-g62b1557"
+    calico_policy_controller    = "quay.io/calico/kube-policy-controller:v1.0.0-rc4"
+    heapster                    = "gcr.io/google_containers/heapster:v1.4.3"
     heapster_nanny              = "gcr.io/google_containers/addon-resizer:1.7"
   }
 }

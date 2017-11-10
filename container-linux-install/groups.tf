@@ -3,7 +3,7 @@ resource "matchbox_group" "container-linux-install" {
   count = "${length(var.machine_names)}"
 
   name    = "${format("container-linux-install-%s", element(var.machine_names, count.index))}"
-  profile = "${matchbox_profile.cached-container-linux-install.name}"
+  profile = "${module.profiles.cached-container-linux-install}"
 
   selector {
     mac = "${element(var.machine_macs, count.index)}"
@@ -24,7 +24,7 @@ resource "matchbox_group" "simple" {
   count = "${length(var.machine_names)}"
 
   name    = "${format("simple-%s", element(var.machine_names, count.index))}"
-  profile = "${matchbox_profile.simple.name}"
+  profile = "${module.profiles.simple-install}"
 
   selector {
     mac = "${element(var.machine_macs, count.index)}"
