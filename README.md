@@ -1,6 +1,6 @@
 # kube-matchbox-tf
 
-This project is for deploying [Container Linux][8] and [Kubernetes][9] to bare metal environments using [matchbox][10] and [Terraform][1]. The following components and add-ons are deployed with the cluster:
+This project is for deploying [Container Linux][8] and [Kubernetes][9] to bare metal environments using [matchbox][10] and [Terraform][1] and is inspired heavily by [munnerz/k8s-matchbox-tf][11]. The following components and add-ons are deployed with the cluster:
 
 - etcd
 - kube-apiserver
@@ -52,3 +52,4 @@ make docker_tf_apply
 [8]: https://coreos.com/os/docs/latest/
 [9]: https://kubernetes.io/docs/home/
 [10]: https://coreos.com/matchbox/docs/latest/
+[11]: https://github.com/munnerz/k8s-matchbox-tf
