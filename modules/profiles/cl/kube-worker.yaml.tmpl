@@ -31,6 +31,8 @@ systemd:
         Documentation=https://kubernetes.io/docs/admin/kubelet/
         Wants=network-online.target
         After=network-online.target
+        Requires=docker.service
+        After=docker.service
 
         [Service]
         Environment="RKT_RUN_ARGS=--uuid-file-save=/var/run/kubelet-pod.uuid \
