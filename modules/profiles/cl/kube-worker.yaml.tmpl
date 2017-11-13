@@ -4,7 +4,7 @@ systemd:
       enable: true
       contents: |
         [Unit]
-        Description=Network is Online reached only when google.com resolves. This prevents resolv.conf mounting race. https://github.com/coreos/bugs/issues/1033
+        Description=Network is online only when google.com resolves. This prevents resolv.conf mounting race for containers. https://github.com/coreos/bugs/issues/1033
 
         [Service]
         Type=oneshot
