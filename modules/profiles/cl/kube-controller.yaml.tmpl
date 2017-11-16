@@ -1,18 +1,36 @@
+networkd:
+  units:
+    - name: 10-eth0.link
+      contents: |
+        [Match]
+        MACAddress={{.mac_address}}
+
+        [Link]
+        Description=eth0
+        MACAddressPolicy=persistent
+        Name=eth0
+    - name: bridge0.netdev
+      contents: |
+        [NetDev]
+        Name=bridge0
+        Kind=bridge
+        MACAddress={{.mac_address}}
+    - name: eth0.network
+      contents: |
+        [Match]
+        Name=eth0
+
+        [Network]
+        Bridge=bridge0
 systemd:
   units:
-    - name: wait-for-dns.service
+    - name: systemd-networkd-wait-online.service
       enable: true
-      contents: |
-        [Unit]
-        Description=Network is online only when google.com resolves. This prevents resolv.conf mounting race for containers. https://github.com/coreos/bugs/issues/1033
-
-        [Service]
-        Type=oneshot
-        RemainAfterExit=true
-        ExecStart=/bin/sh -c 'while ! getent ahosts google.com >dev/null; do sleep 1; done'
-
-        [Install]
-        WantedBy=network-online.target
+      dropins:
+        - name: 10-wait-online-bridge0.conf
+          contents: |
+            [Service]
+            ExecStart=/usr/lib/systemd/systemd-networkd-wait-online -i bridge0
     - name: kubelet.path
       enable: true
       contents: |
@@ -80,6 +98,12 @@ storage:
       contents:
         inline: |
           {{.domain_name}}
+    - path: /etc/coreos/update.conf
+      filesystem: root
+      contents:
+        inline: |
+          REBOOT_STRATEGY=etcd-lock
+          GROUP=master
 
 passwd:
   users:
