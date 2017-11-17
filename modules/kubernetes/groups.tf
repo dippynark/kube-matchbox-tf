@@ -57,7 +57,7 @@ resource "matchbox_group" "kube-worker" {
     domain_name          = "${element(var.worker_domains, count.index)}"
     k8s_dns_service_ip   = "${var.kube_dns_service_ip}"
     ssh_authorized_key   = "${var.ssh_authorized_key}"
-    mac_address          = "${element(var.controller_macs, count.index)}"
+    mac_address          = "${element(var.worker_macs, count.index)}"
 
     # extra data
     kubelet_image_url = "docker://${element(split(":", var.container_images["hyperkube"]), 0)}"

@@ -117,6 +117,12 @@ resource "template_dir" "install" {
     calico_cni_image                  = "${var.container_images["calico_cni"]}"
     calico_policy_controller_image    = "${var.container_images["calico_policy_controller"]}"
 
+    update_operator_image             = "${var.container_images["update_operator"]}"
+    # If there is only one master, standalone_master_domain will be set to its domain
+    # Otherwise this will be set to the empty string
+    # This is to make sure the update operator schedules again after an update when there is a single master
+    standalone_master_domain          = "${replace(replace("1", "/^${length(var.controller_domains)}$/", element(var.controller_domains, 0)), "/^1$/", "\"\"")}"
+
     etcd_endpoints = "${join(",", formatlist("http://%s:2379", var.etcd_endpoints))}"
 
     # Choose the etcd endpoints to use.

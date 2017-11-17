@@ -10,7 +10,7 @@ networkd:
         MACAddressPolicy=persistent
         Name=eth0
     - name: bridge0.netdev
-      contents: |
+      contents: | 
         [NetDev]
         Name=bridge0
         Kind=bridge
@@ -24,6 +24,11 @@ networkd:
         Bridge=bridge0
 systemd:
   units:
+    - name: update-engine.service
+      enable: true
+    - name: locksmithd.service
+      enable: false
+      mask: true
     - name: systemd-networkd-wait-online.service
       enable: true
       dropins:
@@ -103,7 +108,8 @@ storage:
       contents:
         inline: |
           REBOOT_STRATEGY=etcd-lock
-          GROUP=master
+          GROUP=stable
+
 
 passwd:
   users:

@@ -2,7 +2,7 @@
 
 This project is for deploying [Container Linux][8] and [Kubernetes][9] to bare metal environments using [matchbox][10] and [Terraform][1] and is inspired heavily by [munnerz/k8s-matchbox-tf][11]. The following components and add-ons are deployed with the cluster:
 
-- etcd
+- etcd (one instance per master)
 - kube-apiserver
 - kube-scheduler
 - kube-controller-manager
@@ -11,6 +11,7 @@ This project is for deploying [Container Linux][8] and [Kubernetes][9] to bare m
 - kube-dashboard
 - heapster
 - calico (for pod-to-pod networking and network policy)
+- [update-operator][12] (for automated Container Linux updates)
 
 ## Prerequisites
 
@@ -53,3 +54,4 @@ make docker_tf_apply
 [9]: https://kubernetes.io/docs/home/
 [10]: https://coreos.com/matchbox/docs/latest/
 [11]: https://github.com/munnerz/k8s-matchbox-tf
+[12]: https://github.com/coreos/container-linux-update-operator

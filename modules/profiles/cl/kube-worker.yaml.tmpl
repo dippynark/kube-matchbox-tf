@@ -13,7 +13,7 @@ networkd:
       contents: |
         [NetDev]
         Name=bridge0
-        Kind=bridge
+        Kind=bridge 
         MACAddress={{.mac_address}}
     - name: eth0.network
       contents: |
@@ -24,6 +24,11 @@ networkd:
         Bridge=bridge0
 systemd:
   units:
+    - name: update-engine.service
+      enable: true
+    - name: locksmithd.service
+      enable: false
+      mask: true
     - name: systemd-networkd-wait-online.service
       enable: true
       dropins:
@@ -103,7 +108,7 @@ storage:
       contents:
         inline: |
           REBOOT_STRATEGY=etcd-lock
-          GROUP=worker
+          GROUP=stable
 
 passwd:
   users:
