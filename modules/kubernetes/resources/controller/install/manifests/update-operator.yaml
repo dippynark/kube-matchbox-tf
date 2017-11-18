@@ -77,6 +77,15 @@ spec:
       labels:
         app: container-linux-update-agent
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: beta.kubernetes.io/arch
+                operator: In
+                values:
+                - amd64
       containers:
       - name: update-agent
         image: ${update_operator_image}

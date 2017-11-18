@@ -103,6 +103,7 @@ resource "template_dir" "install" {
 
   vars {
     hyperkube_image                   = "${var.container_images["hyperkube"]}"
+    hyperkube_arm_image               = "${var.container_images["hyperkube_arm"]}"
 
     kubedns_image                     = "${var.container_images["kubedns"]}"
     kubednsmasq_image                 = "${var.container_images["kubednsmasq"]}"

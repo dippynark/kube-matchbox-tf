@@ -29,6 +29,7 @@ variable "container_images" {
 
   default = {
     hyperkube                   = "quay.io/coreos/hyperkube:v1.8.2_coreos.0"
+    hyperkube_arm               = "gcr.io/google_containers/hyperkube-arm:v1.8.2"
     etcd                        = "quay.io/coreos/etcd:v3.2.9"
     kubedns                     = "gcr.io/google_containers/k8s-dns-kube-dns-amd64:1.14.7"
     kubednsmasq                 = "gcr.io/google_containers/k8s-dns-dnsmasq-nanny-amd64:1.14.7"

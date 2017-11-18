@@ -1,11 +1,11 @@
 apiVersion: "extensions/v1beta1"
 kind: DaemonSet
 metadata:
-  name: kube-proxy
+  name: kube-proxy-arm
   namespace: kube-system
   labels:
     tier: node
-    k8s-app: kube-proxy
+    k8s-app: kube-proxy-arm
 spec:
   updateStrategy:
     rollingUpdate:
@@ -15,7 +15,7 @@ spec:
     metadata:
       labels:
         tier: node
-        k8s-app: kube-proxy
+        k8s-app: kube-proxy-arm
       annotations:
         scheduler.alpha.kubernetes.io/critical-pod: ""
     spec:
@@ -24,13 +24,13 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
             - matchExpressions:
-              - key: beta.kubernetes.io/arch
+              - key: beta.kubernetes.io/arch 
                 operator: In
                 values:
-                - amd64
+                - arm
       containers:
-      - name: kube-proxy
-        image: ${hyperkube_image}
+      - name: kube-proxy-arm
+        image: ${hyperkube_arm_image}
         command:
         - /hyperkube
         - proxy
@@ -59,6 +59,10 @@ spec:
       - key: "node-role.kubernetes.io/master"
         operator: "Exists"
         effect: "NoSchedule"
+      - key: "arch"
+        operator: "Equal"
+        value: "arm"
+        effect: "NoExecute"
       volumes:
       - hostPath:
           path: /usr/share/ca-certificates

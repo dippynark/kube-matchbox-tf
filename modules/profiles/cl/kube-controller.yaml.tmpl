@@ -35,6 +35,7 @@ systemd:
         - name: 10-wait-online-bridge0.conf
           contents: |
             [Service]
+            ExecStart=
             ExecStart=/usr/lib/systemd/systemd-networkd-wait-online -i bridge0
     - name: kubelet.path
       enable: true
