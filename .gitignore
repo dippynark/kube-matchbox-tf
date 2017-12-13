@@ -1,3 +1,2 @@
-Makefile
 /environments/*
 !/environments/example/
