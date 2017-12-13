@@ -1,6 +1,6 @@
 DOCKER_IMAGE ?= k8s-terraform:latest
 
-ENVIRONMENT := home
+ENVIRONMENT := ${ENVIRONMENT}
 
 STACK_DIR := $(shell pwd)/kubernetes-install
 
@@ -8,7 +8,7 @@ STACK_DIR := $(shell pwd)/kubernetes-install
 ENV_DIR := $(shell pwd)/environments/${ENVIRONMENT}
 
 # Bucket to store terraform state in
-STATE_BUCKET_NAME := terraform-state-bucket
+STATE_BUCKET_NAME := ${STATE_BUCKET_NAME}
 STATE_BUCKET := gs://${STATE_BUCKET_NAME}/${ENVIRONMENT}
 
 TERRAFORM_VARS := -var-file=${ENV_DIR}/${ENVIRONMENT}.tfvars \
