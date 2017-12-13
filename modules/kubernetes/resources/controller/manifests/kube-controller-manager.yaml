@@ -24,6 +24,8 @@ spec:
     - --insecure-experimental-approve-all-kubelet-csrs-for-group=system:kubelet-bootstrap
     - --cloud-provider=external
     - --v=${verbosity}
+    - --allocate-node-cidrs=true
+    - --cluster-cidr=${cluster_cidr}
     livenessProbe:
       httpGet:
         path: /healthz

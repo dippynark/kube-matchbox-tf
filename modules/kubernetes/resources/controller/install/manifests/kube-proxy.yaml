@@ -19,15 +19,6 @@ spec:
       annotations:
         scheduler.alpha.kubernetes.io/critical-pod: ""
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: beta.kubernetes.io/arch
-                operator: In
-                values:
-                - amd64
       containers:
       - name: kube-proxy
         image: ${hyperkube_image}
@@ -66,3 +57,77 @@ spec:
       - name: etc-kubernetes
         hostPath:
           path: /etc/kubernetes
+---
+apiVersion: "extensions/v1beta1"
+kind: DaemonSet
+metadata:
+  name: kube-proxy-arm
+  namespace: kube-system
+  labels:
+    tier: node
+    k8s-app: kube-proxy-arm
+spec:
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        tier: node
+        k8s-app: kube-proxy-arm
+      annotations:
+        scheduler.alpha.kubernetes.io/critical-pod: ""
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: beta.kubernetes.io/arch 
+                operator: In
+                values:
+                - arm
+      containers:
+      - name: kube-proxy-arm
+        image: ${hyperkube_arm_image}
+        command:
+        - /hyperkube
+        - proxy
+        - --kubeconfig=/etc/kubernetes/kubeconfig
+        - --proxy-mode=iptables
+        - --hostname-override=$(NODE_NAME)
+        - --cluster-cidr=${cluster_cidr}
+        env:
+          - name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /etc/ssl/certs
+          name: ssl-certs-host
+          readOnly: true
+        - name: etc-kubernetes
+          mountPath: /etc/kubernetes
+          readOnly: true
+      hostNetwork: true
+      tolerations:
+      - key: "CriticalAddonsOnly"
+        operator: "Exists"
+      - key: "node-role.kubernetes.io/master"
+        operator: "Exists"
+        effect: "NoSchedule"
+      - key: "arch"
+        operator: "Equal"
+        value: "arm"
+        effect: "NoSchedule"
+      volumes:
+      - hostPath:
+          path: /usr/share/ca-certificates
+        name: ssl-certs-host
+      - name: etc-kubernetes
+        hostPath:
+          path: /etc/kubernetes
+

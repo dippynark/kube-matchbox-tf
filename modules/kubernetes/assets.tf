@@ -72,6 +72,7 @@ data "template_file" "controller_manifest_controller_manager" {
     vars {
       verbosity = "${var.verbosity}"
       hyperkube_image = "${var.container_images["hyperkube"]}"
+      cluster_cidr        = "${var.cluster_cidr}"
     }
 }
 
@@ -114,9 +115,8 @@ resource "template_dir" "install" {
     heapster_image                    = "${var.container_images["heapster"]}"
     heapster_nanny_image              = "${var.container_images["heapster_nanny"]}"
     
-    calico_node_image                 = "${var.container_images["calico_node"]}"
-    calico_cni_image                  = "${var.container_images["calico_cni"]}"
-    calico_policy_controller_image    = "${var.container_images["calico_policy_controller"]}"
+    flannel_image                     = "${var.container_images["flannel"]}"
+    flannel_arm_image                 = "${var.container_images["flannel_arm"]}"
 
     update_operator_image             = "${var.container_images["update_operator"]}"
     # If there is only one master, standalone_master_domain will be set to its domain
