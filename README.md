@@ -35,6 +35,7 @@ Terraform is used to configure `matchbox` programmatically. The latest version c
 
 ```bash
 # Create environment tfvars file. An example can be found at environments/example
+export ENVIRONMENT=example
 export STATE_BUCKET_NAME=terraform-state-bucket
 make docker_image
 make docker_tf_init
