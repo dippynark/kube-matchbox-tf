@@ -25,7 +25,7 @@ spec:
         command:
         - /hyperkube
         - proxy
-        - --kubeconfig=/etc/kubernetes/kubeconfig
+        - --kubeconfig=/etc/kubernetes/kube-proxy-kubeconfig
         - --proxy-mode=iptables
         - --hostname-override=$(NODE_NAME)
         - --cluster-cidr=${cluster_cidr}
@@ -94,7 +94,7 @@ spec:
         command:
         - /hyperkube
         - proxy
-        - --kubeconfig=/etc/kubernetes/kubeconfig
+        - --kubeconfig=/etc/kubernetes/kube-proxy-kubeconfig
         - --proxy-mode=iptables
         - --hostname-override=$(NODE_NAME)
         - --cluster-cidr=${cluster_cidr}

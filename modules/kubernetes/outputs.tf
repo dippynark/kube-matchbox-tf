@@ -28,6 +28,10 @@ output "controller_kubeconfig" {
   value = "${data.template_file.controller_kubeconfig.*.rendered}"
 }
 
+output "kube_proxy_kubeconfig" {
+  value = "${data.template_file.kube_proxy_kubeconfig.rendered}"
+}
+
 output "kube_controller_manager_kubeconfig" {
   value = "${data.template_file.kube_controller_manager_kubeconfig.rendered}"
 }

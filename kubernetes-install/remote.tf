@@ -24,6 +24,11 @@ resource "null_resource" "copy-config" {
   }
 
   provisioner "file" {
+    content     = "${module.kubernetes.kube_proxy_kubeconfig}"
+    destination = "/home/core/kube-proxy-kubeconfig"
+  }
+
+  provisioner "file" {
     content     = "${module.kubernetes.kube_controller_manager_kubeconfig}"
     destination = "/home/core/kube-controller-manager-kubeconfig"
   }
@@ -32,6 +37,7 @@ resource "null_resource" "copy-config" {
     inline = [
       "sudo mkdir -p /etc/kubernetes",
       "sudo mv /home/core/kubeconfig /etc/kubernetes/kubeconfig", 
+      "sudo mv /home/core/kube-proxy-kubeconfig /etc/kubernetes/kube-proxy-kubeconfig",
       "sudo mv /home/core/kube-controller-manager-kubeconfig /etc/kubernetes/kube-controller-manager-kubeconfig", 
     ]
   }

@@ -144,6 +144,48 @@ resource "local_file" "kubelet-crt" {
   filename = "${var.assets_dir}/tls/${element(concat(var.controller_names, var.worker_names), count.index)}-kubelet.crt"
 }
 
+# Kube Proxy
+resource "tls_private_key" "kube_proxy" {
+  algorithm = "RSA"
+  rsa_bits  = "2048"
+}
+
+resource "tls_cert_request" "kube_proxy" {
+  key_algorithm   = "${tls_private_key.kube_proxy.algorithm}"
+  private_key_pem = "${tls_private_key.kube_proxy.private_key_pem}"
+
+  subject {
+    common_name  = "system:kube-proxy"
+  }
+}
+
+resource "tls_locally_signed_cert" "kube_proxy" {
+  cert_request_pem = "${tls_cert_request.kube_proxy.cert_request_pem}"
+
+  ca_key_algorithm   = "${var.ca_cert == "" ? join(" ", tls_self_signed_cert.kube-ca.*.key_algorithm) : var.ca_key_alg}"
+  ca_private_key_pem = "${var.ca_cert == "" ? join(" ", tls_private_key.kube-ca.*.private_key_pem) : var.ca_key}"
+  ca_cert_pem        = "${var.ca_cert == "" ? join(" ", tls_self_signed_cert.kube-ca.*.cert_pem) : var.ca_cert}"
+
+  validity_period_hours = 8760
+
+  allowed_uses = [
+    "key_encipherment",
+    "digital_signature",
+    "server_auth",
+    "client_auth",
+  ]
+}
+
+resource "local_file" "kube_proxy_key" {
+  content  = "${tls_private_key.kube_proxy.private_key_pem}"
+  filename = "${var.assets_dir}/tls/kube-proxy.key"
+}
+
+resource "local_file" "kube_proxy_crt" {
+  content  = "${tls_locally_signed_cert.kube_proxy.cert_pem}"
+  filename = "${var.assets_dir}/tls/kube-proxy.crt"
+}
+
 # Kube Controller Manager
 resource "tls_private_key" "kube_controller_manager" {
   algorithm = "RSA"
@@ -186,7 +228,6 @@ resource "local_file" "kube_controller_manager_crt" {
   filename = "${var.assets_dir}/tls/kube-controller-manager.crt"
 }
 
-
 # Admin
 resource "tls_private_key" "admin" {
   algorithm = "RSA"
@@ -199,7 +240,7 @@ resource "tls_cert_request" "admin" {
 
   subject {
     common_name  = "admin"
-    organization = "cluster-admin"
+    organization = "system:masters"
   }
 }
 

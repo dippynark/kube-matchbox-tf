@@ -20,6 +20,24 @@ resource "local_file" "controller_kubeconfig" {
   filename = "${var.assets_dir}/controller/${element(concat(var.controller_names, var.worker_names), count.index)}-kubeconfig"
 }
 
+# kube-proxy kubeconfig
+data "template_file" "kube_proxy_kubeconfig" {
+  template = "${file("${path.module}/resources/controller/kubeconfig")}"
+
+  vars {
+    ca_cert      = "${base64encode(var.ca_cert == "" ? join(" ", tls_self_signed_cert.kube-ca.*.cert_pem) : var.ca_cert)}"
+    cert = "${base64encode(tls_locally_signed_cert.kube_proxy.cert_pem)}"
+    key  = "${base64encode(tls_private_key.kube_proxy.private_key_pem)}"
+    server       = "${var.kube_apiserver_url}"
+    user = "kube-proxy"
+  }
+}
+
+resource "local_file" "kube_proxy_kubeconfig" {
+  content  = "${data.template_file.controller_kubeconfig.rendered}"
+  filename = "${var.assets_dir}/controller/kube-proxy-kubeconfig"
+}
+
 # kube-controller-manager kubeconfig
 data "template_file" "kube_controller_manager_kubeconfig" {
   template = "${file("${path.module}/resources/controller/kubeconfig")}"
