@@ -16,4 +16,4 @@ wait_for_apiserver() {
 echo "## Waiting for apiserver"
 wait_for_apiserver
 
-kubectl apply -f $ASSETS_DIR/manifests/
+kubectl apply -Rf $ASSETS_DIR/manifests/

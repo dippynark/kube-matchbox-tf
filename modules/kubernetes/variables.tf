@@ -40,7 +40,16 @@ variable "container_images" {
     heapster                    = "gcr.io/google_containers/heapster:v1.4.3"
     heapster_nanny              = "gcr.io/google_containers/addon-resizer:1.7"
     update_operator             = "quay.io/coreos/container-linux-update-operator:v0.4.1"
+
+    istio_proxy_init            = "gcr.io/istio-testing/proxy_init:3101ea9d82a5f83b699c2d3245b371a19fa6bef4"
+    istio_proxy_debug           = "gcr.io/istio-testing/proxy_debug:3101ea9d82a5f83b699c2d3245b371a19fa6bef4"
+    istio_sidecar_initializer   = "gcr.io/istio-testing/sidecar_initializer:3101ea9d82a5f83b699c2d3245b371a19fa6bef4"
   }
+}
+
+variable "istio-namespace" {
+  type = "string"
+  default = "istio-system"
 }
 
 variable "verbosity" {

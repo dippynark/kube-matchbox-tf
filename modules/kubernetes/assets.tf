@@ -161,6 +161,12 @@ resource "template_dir" "install" {
     flannel_arm_image                 = "${var.container_images["flannel_arm"]}"
 
     update_operator_image             = "${var.container_images["update_operator"]}"
+
+    istio_proxy_init                  = "${var.container_images["istio_proxy_init"]}"
+    istio_proxy_debug                 = "${var.container_images["istio_proxy_debug"]}"
+    istio_sidecar_initializer         = "${var.container_images["istio_sidecar_initializer"]}"
+    istio_proxy_tag                   = "${element(split(":", var.container_images["istio_proxy_init"]), 1)}"
+    istio_namespace                   = "${var.istio-namespace}"
     # If there is only one master, standalone_master_domain will be set to its domain
     # Otherwise this will be set to the empty string
     # This is to make sure the update operator schedules again after an update when there is a single master
