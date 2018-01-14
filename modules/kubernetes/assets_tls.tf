@@ -93,22 +93,28 @@ resource "local_file" "apiserver-crt" {
 
 # Kubelet
 resource "tls_private_key" "kubelet" {
+  count = "${length(var.controller_names) + length(var.worker_names)}"
+
   algorithm = "RSA"
   rsa_bits  = "2048"
 }
 
 resource "tls_cert_request" "kubelet" {
+  count = "${length(var.controller_names) + length(var.worker_names)}"
+
   key_algorithm   = "${tls_private_key.kubelet.algorithm}"
   private_key_pem = "${tls_private_key.kubelet.private_key_pem}"
 
   subject {
-    common_name  = "kubelet"
-    organization = "system:masters"
+    common_name  = "system:node:${element(concat(var.controller_domains, var.worker_domains), count.index)}"
+    organization = "system:nodes"
   }
 }
 
 resource "tls_locally_signed_cert" "kubelet" {
-  cert_request_pem = "${tls_cert_request.kubelet.cert_request_pem}"
+  count = "${length(var.controller_names) + length(var.worker_names)}"
+
+  cert_request_pem = "${element(tls_cert_request.kubelet.*.cert_request_pem, count.index)}"
 
   ca_key_algorithm   = "${var.ca_cert == "" ? join(" ", tls_self_signed_cert.kube-ca.*.key_algorithm) : var.ca_key_alg}"
   ca_private_key_pem = "${var.ca_cert == "" ? join(" ", tls_private_key.kube-ca.*.private_key_pem) : var.ca_key}"
@@ -125,14 +131,61 @@ resource "tls_locally_signed_cert" "kubelet" {
 }
 
 resource "local_file" "kubelet-key" {
-  content  = "${tls_private_key.kubelet.private_key_pem}"
-  filename = "${var.assets_dir}/tls/kubelet.key"
+  count = "${length(var.controller_names) + length(var.worker_names)}"
+
+  content  = "${element(tls_private_key.kubelet.*.private_key_pem, count.index)}"
+  filename = "${var.assets_dir}/tls/${element(concat(var.controller_names, var.worker_names), count.index)}-kubelet.key"
 }
 
 resource "local_file" "kubelet-crt" {
-  content  = "${tls_locally_signed_cert.kubelet.cert_pem}"
-  filename = "${var.assets_dir}/tls/kubelet.crt"
+  count = "${length(var.controller_names) + length(var.worker_names)}"
+
+  content  = "${element(tls_locally_signed_cert.kubelet.*.cert_pem, count.index)}"
+  filename = "${var.assets_dir}/tls/${element(concat(var.controller_names, var.worker_names), count.index)}-kubelet.crt"
 }
+
+# Kube Controller Manager
+resource "tls_private_key" "kube_controller_manager" {
+  algorithm = "RSA"
+  rsa_bits  = "2048"
+}
+
+resource "tls_cert_request" "kube_controller_manager" {
+  key_algorithm   = "${tls_private_key.kube_controller_manager.algorithm}"
+  private_key_pem = "${tls_private_key.kube_controller_manager.private_key_pem}"
+
+  subject {
+    common_name  = "system:kube-controller-manager"
+  }
+}
+
+resource "tls_locally_signed_cert" "kube_controller_manager" {
+  cert_request_pem = "${tls_cert_request.kube_controller_manager.cert_request_pem}"
+
+  ca_key_algorithm   = "${var.ca_cert == "" ? join(" ", tls_self_signed_cert.kube-ca.*.key_algorithm) : var.ca_key_alg}"
+  ca_private_key_pem = "${var.ca_cert == "" ? join(" ", tls_private_key.kube-ca.*.private_key_pem) : var.ca_key}"
+  ca_cert_pem        = "${var.ca_cert == "" ? join(" ", tls_self_signed_cert.kube-ca.*.cert_pem) : var.ca_cert}"
+
+  validity_period_hours = 8760
+
+  allowed_uses = [
+    "key_encipherment",
+    "digital_signature",
+    "server_auth",
+    "client_auth",
+  ]
+}
+
+resource "local_file" "kube_controller_manager_key" {
+  content  = "${tls_private_key.kube_controller_manager.private_key_pem}"
+  filename = "${var.assets_dir}/tls/kube-controller-manager.key"
+}
+
+resource "local_file" "kube_controller_manager_crt" {
+  content  = "${tls_locally_signed_cert.kube_controller_manager.cert_pem}"
+  filename = "${var.assets_dir}/tls/kube-controller-manager.crt"
+}
+
 
 # Admin
 resource "tls_private_key" "admin" {

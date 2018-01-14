@@ -16,12 +16,12 @@ spec:
     - controller-manager
     - --address=127.0.0.1
     - --leader-elect
-    - --master=127.0.0.1:8080
+    - --kubeconfig=/etc/kubernetes/kube-controller-manager-kubeconfig
     - --root-ca-file=/etc/kubernetes/tls/ca.crt
+    - --use-service-account-credentials
     - --service-account-private-key-file=/etc/kubernetes/tls/service-account.key
     - --cluster-signing-cert-file=/etc/kubernetes/tls/ca.crt
     - --cluster-signing-key-file=/etc/kubernetes/tls/ca.key
-    - --insecure-experimental-approve-all-kubelet-csrs-for-group=system:kubelet-bootstrap
     - --cloud-provider=external
     - --v=${verbosity}
     - --allocate-node-cidrs=true

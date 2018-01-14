@@ -25,7 +25,11 @@ output "install_id" {
 
 # Output files
 output "controller_kubeconfig" {
-  value = "${data.template_file.controller_kubeconfig.rendered}"
+  value = "${data.template_file.controller_kubeconfig.*.rendered}"
+}
+
+output "kube_controller_manager_kubeconfig" {
+  value = "${data.template_file.kube_controller_manager_kubeconfig.rendered}"
 }
 
 output "controller_manifest_etcd" {

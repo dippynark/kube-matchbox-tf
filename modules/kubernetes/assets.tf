@@ -1,21 +1,44 @@
-# kubeconfig (resources/assets/auth/kubeconfig)
+# kubelet kubeconfig
 data "template_file" "controller_kubeconfig" {
+  count = "${length(var.controller_names) + length(var.worker_names)}"
+
   template = "${file("${path.module}/resources/controller/kubeconfig")}"
 
   vars {
     ca_cert      = "${base64encode(var.ca_cert == "" ? join(" ", tls_self_signed_cert.kube-ca.*.cert_pem) : var.ca_cert)}"
-    cert = "${base64encode(tls_locally_signed_cert.kubelet.cert_pem)}"
-    key  = "${base64encode(tls_private_key.kubelet.private_key_pem)}"
+    cert = "${base64encode(element(tls_locally_signed_cert.kubelet.*.cert_pem, count.index))}"
+    key  = "${base64encode(element(tls_private_key.kubelet.*.private_key_pem, count.index))}"
     server       = "${var.kube_apiserver_url}"
+    user = "kubelet"
   }
 }
 
 resource "local_file" "controller_kubeconfig" {
+  count = "${length(var.controller_names) + length(var.worker_names)}"
+
   content  = "${data.template_file.controller_kubeconfig.rendered}"
-  filename = "${var.assets_dir}/controller/kubeconfig"
+  filename = "${var.assets_dir}/controller/${element(concat(var.controller_names, var.worker_names), count.index)}-kubeconfig"
 }
 
-# admin kubeconfig (resources/assets/auth/admin-kubeconfig)
+# kube-controller-manager kubeconfig
+data "template_file" "kube_controller_manager_kubeconfig" {
+  template = "${file("${path.module}/resources/controller/kubeconfig")}"
+
+  vars {
+    ca_cert      = "${base64encode(var.ca_cert == "" ? join(" ", tls_self_signed_cert.kube-ca.*.cert_pem) : var.ca_cert)}"
+    cert = "${base64encode(tls_locally_signed_cert.kube_controller_manager.cert_pem)}"
+    key  = "${base64encode(tls_private_key.kube_controller_manager.private_key_pem)}"
+    server       = "${var.kube_apiserver_url}"
+    user = "kube-controller-manager"
+  }
+}
+
+resource "local_file" "kube_controller_manager_kubeconfig" {
+  content  = "${data.template_file.controller_kubeconfig.rendered}"
+  filename = "${var.assets_dir}/controller/kube-controller-manager-kubeconfig"
+}
+
+# admin kubeconfig
 data "template_file" "admin_kubeconfig" {
   template = "${file("${path.module}/resources/controller/kubeconfig")}"
 
@@ -24,11 +47,12 @@ data "template_file" "admin_kubeconfig" {
     cert = "${base64encode(tls_locally_signed_cert.admin.cert_pem)}"
     key  = "${base64encode(tls_private_key.admin.private_key_pem)}"
     server     = "${var.kube_apiserver_url}"
+    user = "admin"
   }
 }
 
 resource "local_file" "admin_kubeconfig" {
-  content  = "${data.template_file.controller_kubeconfig.rendered}"
+  content  = "${data.template_file.admin_kubeconfig.rendered}"
   filename = "${var.assets_dir}/admin/kubeconfig"
 }
 

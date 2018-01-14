@@ -3,7 +3,8 @@ resource "null_resource" "copy-config" {
   count = "${length(var.controller_names) + length(var.worker_names)}"
 
   triggers {
-    kubeconfig = "${module.kubernetes.controller_kubeconfig}"
+    kubeconfig = "${module.kubernetes.controller_kubeconfig[count.index]}"
+    kube_controller_manager_kubeconfig = "${module.kubernetes.kube_controller_manager_kubeconfig}"
     ca_cert = "${module.kubernetes.ca_cert}"
     id = "${module.kubernetes.install_id}"
   }
@@ -18,14 +19,20 @@ resource "null_resource" "copy-config" {
   }
   
   provisioner "file" {
-    content     = "${module.kubernetes.controller_kubeconfig}"
+    content     = "${module.kubernetes.controller_kubeconfig[count.index]}"
     destination = "/home/core/kubeconfig"
+  }
+
+  provisioner "file" {
+    content     = "${module.kubernetes.kube_controller_manager_kubeconfig}"
+    destination = "/home/core/kube-controller-manager-kubeconfig"
   }
 
   provisioner "remote-exec" {
     inline = [
       "sudo mkdir -p /etc/kubernetes",
       "sudo mv /home/core/kubeconfig /etc/kubernetes/kubeconfig", 
+      "sudo mv /home/core/kube-controller-manager-kubeconfig /etc/kubernetes/kube-controller-manager-kubeconfig", 
     ]
   }
 }

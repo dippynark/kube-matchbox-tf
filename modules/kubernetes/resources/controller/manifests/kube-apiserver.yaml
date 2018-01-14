@@ -15,7 +15,7 @@ spec:
     - /hyperkube
     - apiserver
     - --insecure-bind-address=127.0.0.1
-    - --admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota,DefaultTolerationSeconds,PodSecurityPolicy
+    - --admission-control=NodeRestriction,NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota,DefaultTolerationSeconds
     - --service-cluster-ip-range=${service_cidr}
     - --service-account-key-file=/etc/kubernetes/tls/service-account.key
     - --client-ca-file=/etc/kubernetes/tls/ca.crt
@@ -26,7 +26,7 @@ spec:
     - --kubelet-preferred-address-types=InternalIP,Hostname,ExternalIP
     - --anonymous-auth=false
     - --etcd-servers=http://127.0.0.1:2379
-    - --authorization-mode=RBAC
+    - --authorization-mode=Node,RBAC
     - --feature-gates=StreamingProxyRedirects=true
     - --runtime-config=batch/v2alpha1
     - --storage-backend=etcd3
