@@ -162,11 +162,10 @@ resource "template_dir" "install" {
 
     update_operator_image             = "${var.container_images["update_operator"]}"
 
-    istio_proxy_init                  = "${var.container_images["istio_proxy_init"]}"
-    istio_proxy_debug                 = "${var.container_images["istio_proxy_debug"]}"
-    istio_sidecar_initializer         = "${var.container_images["istio_sidecar_initializer"]}"
-    istio_proxy_tag                   = "${element(split(":", var.container_images["istio_proxy_init"]), 1)}"
-    istio_namespace                   = "${var.istio-namespace}"
+    statsd_exporter                   = "${var.container_images["statsd_exporter"]}"
+
+    istio_version                     = "${var.istio_version}"
+    istio_namespace                   = "${var.istio_namespace}"
     # If there is only one master, standalone_master_domain will be set to its domain
     # Otherwise this will be set to the empty string
     # This is to make sure the update operator schedules again after an update when there is a single master
