@@ -1,13 +1,7 @@
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: nginx-ingress-serviceaccount
-  namespace: ingress-nginx
----
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
-  name: nginx-ingress-clusterrole
+  name: nginx-istio-ingress-clusterrole
 rules:
   - apiGroups:
       - ""
@@ -59,8 +53,8 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: Role
 metadata:
-  name: nginx-ingress-role
-  namespace: ingress-nginx
+  name: nginx-istio-ingress-role
+  namespace: ${istio_namespace}
 rules:
   - apiGroups:
       - ""
@@ -100,26 +94,40 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: RoleBinding
 metadata:
-  name: nginx-ingress-role-nisa-binding
-  namespace: ingress-nginx
+  name: nginx-istio-ingress-role-nisa-binding
+  namespace: ${istio_namespace}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: nginx-ingress-role
+  name: nginx-istio-ingress-role
 subjects:
   - kind: ServiceAccount
-    name: nginx-ingress-serviceaccount
-    namespace: ingress-nginx
+    name: nginx-istio-ingress-service-account
+    namespace: ${istio_namespace}
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
-  name: nginx-ingress-clusterrole-nisa-binding
+  name: nginx-istio-ingress-clusterrole-nisa-binding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: nginx-ingress-clusterrole
+  name: nginx-istio-ingress-clusterrole
 subjects:
   - kind: ServiceAccount
-    name: nginx-ingress-serviceaccount
-    namespace: ingress-nginx
+    name: nginx-istio-ingress-service-account
+    namespace: ${istio_namespace}
+---
+# Grant permissions to the Ingress controller.
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: istio-ingress-admin-role-binding-${istio_namespace}
+subjects:
+- kind: ServiceAccount
+  name: nginx-istio-ingress-service-account
+  namespace: ${istio_namespace}
+roleRef:
+  kind: ClusterRole
+  name: istio-pilot-${istio_namespace}
+  apiGroup: rbac.authorization.k8s.io

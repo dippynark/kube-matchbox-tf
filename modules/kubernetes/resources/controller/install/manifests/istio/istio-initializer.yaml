@@ -11,7 +11,15 @@ metadata:
 data:
   config: |-
     policy: "enabled"
-    namespaces: [""] # everything, aka v1.NamepsaceAll, aka cluster-wide
+    #namespaces: [""] # everything, aka v1.NamepsaceAll, aka cluster-wide
+    namespaces:
+    - bookstack
+    - default
+    - lukeaddison
+    - pirate
+    - radarr
+    - sonarr
+    - reboot-coordinator
     initializerName: "sidecar.initializer.istio.io" 
     params:
       initImage: docker.io/istio/proxy_init:${istio_version}
