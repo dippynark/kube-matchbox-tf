@@ -9,62 +9,36 @@ spec:
   ports:
   - name: http
     port: 80
-    targetPort: 81
+    targetPort: 80
     protocol: TCP
     nodePort: 30080
   - name: https
     port: 443
-    targetPort: 444
+    targetPort: 443
     nodePort: 30443
     protocol: TCP
   selector:
     app: ingress-nginx
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: istio-ingress
-  namespace: ${istio_namespace}
-  labels:
-    istio: ingress
-spec:
-  ports:
-  - port: 80
-    name: http
-  - port: 443
-    name: https
-  selector:
-    istio: ingress
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: nginx-istio-ingress-service-account
-  namespace: ${istio_namespace}
----
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: nginx-ingress-controller 
+  name: nginx-ingress-controller
   namespace: ${istio_namespace}
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: ingress-nginx
-      istio: ingress
   template:
     metadata:
       labels:
         app: ingress-nginx
-        istio: ingress
       annotations:
         prometheus.io/port: '10254'
         prometheus.io/scrape: 'true'
     spec:
-      serviceAccountName: nginx-istio-ingress-service-account
-      #serviceAccountName: nginx-ingress-service-account
-      #serviceAccountName: istio-ingress-service-account
+      serviceAccountName: nginx-ingress-serviceaccount
       containers:
         - name: nginx-ingress-controller
           image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.9.0
@@ -74,8 +48,6 @@ spec:
             - --configmap=$(POD_NAMESPACE)/nginx-configuration
             - --tcp-services-configmap=$(POD_NAMESPACE)/tcp-services
             - --udp-services-configmap=$(POD_NAMESPACE)/udp-services
-            - --http-port=81
-            - --https-port=444
           env:
             - name: POD_NAME
               valueFrom:
@@ -87,9 +59,9 @@ spec:
                   fieldPath: metadata.namespace
           ports:
           - name: http
-            containerPort: 81
+            containerPort: 80
           - name: https
-            containerPort: 444
+            containerPort: 443
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -109,63 +81,3 @@ spec:
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 1
-        - name: istio-ingress
-          image: docker.io/istio/proxy_debug:${istio_version}
-          args:
-          - proxy
-          - ingress
-          - -v
-          - "2"
-          - --discoveryAddress
-          - istio-pilot:15003
-          - --discoveryRefreshDelay
-          - '1s' #discoveryRefreshDelay
-          - --drainDuration
-          - '45s' #drainDuration
-          - --parentShutdownDuration
-          - '1m0s' #parentShutdownDuration
-          - --connectTimeout
-          - '10s' #connectTimeout
-          - --serviceCluster
-          - istio-ingress
-          - --zipkinAddress
-          - zipkin:9411
-          #- --statsdUdpAddress
-          - istio-mixer:9125
-          - --proxyAdminPort
-          - "15000"
-          - --controlPlaneAuthPolicy
-          - MUTUAL_TLS
-          imagePullPolicy: IfNotPresent
-          ports:
-          - name: http
-            containerPort: 80
-          - name: https
-            containerPort: 443
-          env:
-          - name: POD_NAME
-            valueFrom:
-              fieldRef:
-                apiVersion: v1
-                fieldPath: metadata.name
-          - name: POD_NAMESPACE
-            valueFrom:
-              fieldRef:
-                apiVersion: v1
-                fieldPath: metadata.namespace
-          volumeMounts:
-          - name: istio-certs
-            mountPath: /etc/certs
-            readOnly: true
-          - name: ingress-certs
-            mountPath: /etc/istio/ingress-certs
-            readOnly: true
-      volumes:
-      - name: istio-certs
-        secret:
-          secretName: istio.default
-          optional: true
-      - name: ingress-certs
-        secret:
-          secretName: istio-ingress-certs
-          optional: true
