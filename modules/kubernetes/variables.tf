@@ -51,7 +51,7 @@ variable "istio_namespace" {
 
 variable "istio_version" {
   type = "string"
-  default = "0.3.0"
+  default = "0.4.0"
 }
 
 variable "verbosity" {
