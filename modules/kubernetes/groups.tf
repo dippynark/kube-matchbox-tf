@@ -60,7 +60,7 @@ resource "matchbox_group" "kube-worker" {
     mac_address          = "${element(var.worker_macs, count.index)}"
 
     # extra data
-    kubelet_image_url = "docker://${element(split(":", var.container_images["hyperkube"]), 0)}"
+    kubelet_image_url = "${element(split(":", var.container_images["hyperkube"]), 0)}"
     kubelet_image_tag = "${element(split(":", var.container_images["hyperkube"]), 1)}"
   }
 }
