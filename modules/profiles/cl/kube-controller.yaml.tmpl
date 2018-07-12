@@ -24,6 +24,10 @@ networkd:
         Bridge=bridge0
 systemd:
   units:
+    - name: sshd.service
+      enabled: true
+    - name: sshd.socket
+      mask: true
     - name: update-engine.service
       enable: true
     - name: locksmithd.service
