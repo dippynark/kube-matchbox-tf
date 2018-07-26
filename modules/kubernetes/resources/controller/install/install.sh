@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 export ASSETS_DIR=$1
 alias kubectl="$2"
 

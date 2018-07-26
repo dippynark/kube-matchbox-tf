@@ -148,9 +148,7 @@ resource "template_dir" "install" {
     hyperkube_image                   = "${var.container_images["hyperkube"]}"
     hyperkube_arm_image               = "${var.container_images["hyperkube_arm"]}"
 
-    kubedns_image                     = "${var.container_images["kubedns"]}"
-    kubednsmasq_image                 = "${var.container_images["kubednsmasq"]}"
-    kubedns_sidecar_image             = "${var.container_images["kubedns_sidecar"]}"
+    coredns_image                     = "${var.container_images["coredns"]}"
 
     kube_dashboard_image              = "${var.container_images["kube_dashboard"]}"
 

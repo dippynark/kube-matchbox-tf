@@ -35,6 +35,7 @@ variable "container_images" {
     kubednsmasq                 = "gcr.io/google_containers/k8s-dns-dnsmasq-nanny-amd64:1.14.7"
     kubedns_sidecar             = "gcr.io/google_containers/k8s-dns-sidecar-amd64:1.14.7"
     kube_dashboard              = "gcr.io/google_containers/kubernetes-dashboard-amd64:v1.7.1"
+    coredns                     = "coredns/coredns:1.2.0"
     flannel                     = "quay.io/coreos/flannel:v0.7.1-amd64"
     flannel_arm                 = "quay.io/coreos/flannel:v0.7.1-arm"
     heapster                    = "gcr.io/google_containers/heapster:v1.4.3"
