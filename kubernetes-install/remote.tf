@@ -3,11 +3,7 @@ resource "null_resource" "copy-config" {
   count = "${length(var.controller_names) + length(var.worker_names)}"
 
   triggers {
-    kubeconfig = "${module.kubernetes.controller_kubeconfig[count.index]}"
-    kube_controller_manager_kubeconfig = "${module.kubernetes.kube_controller_manager_kubeconfig}"
-    kube_proxy_kubeconfig = "${module.kubernetes.kube_proxy_kubeconfig}"
-    ca_cert = "${module.kubernetes.ca_cert}"
-    id = "${module.kubernetes.install_id}"
+    id = "${module.kubernetes.id}"
   }
 
   connection {
@@ -20,7 +16,7 @@ resource "null_resource" "copy-config" {
   }
   
   provisioner "file" {
-    content     = "${module.kubernetes.controller_kubeconfig[count.index]}"
+    content     = "${module.kubernetes.kubelet_kubeconfig[count.index]}"
     destination = "/home/core/kubeconfig"
   }
 
@@ -74,7 +70,7 @@ resource "null_resource" "controller_bootstrap" {
   triggers {
     id = "${module.kubernetes.id}"
 
-    ca = "${module.kubernetes.ca_cert}"
+    ca_cert = "${module.kubernetes.ca_cert}"
     ca_key = "${module.kubernetes.ca_key}"
     apiserver_crt = "${module.kubernetes.apiserver_cert}"
     apiserver_key = "${module.kubernetes.apiserver_key}"
@@ -153,7 +149,7 @@ resource "null_resource" "worker_bootstrap" {
   triggers {
     id = "${module.kubernetes.id}"
 
-    ca = "${module.kubernetes.ca_cert}"
+    ca_cert = "${module.kubernetes.ca_cert}"
   }
 
   connection {

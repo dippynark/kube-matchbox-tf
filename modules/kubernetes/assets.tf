@@ -1,5 +1,5 @@
 # kubelet kubeconfig
-data "template_file" "controller_kubeconfig" {
+data "template_file" "kubelet_kubeconfig" {
   count = "${length(var.controller_names) + length(var.worker_names) + length(var.extra_names)}"
 
   template = "${file("${path.module}/resources/controller/kubeconfig")}"
@@ -13,10 +13,10 @@ data "template_file" "controller_kubeconfig" {
   }
 }
 
-resource "local_file" "controller_kubeconfig" {
+resource "local_file" "kubelet_kubeconfig" {
   count = "${length(var.controller_names) + length(var.worker_names) + length(var.extra_names)}"
 
-  content  = "${element(data.template_file.controller_kubeconfig.*.rendered, count.index)}"
+  content  = "${element(data.template_file.kubelet_kubeconfig.*.rendered, count.index)}"
   filename = "${var.assets_dir}/controller/${element(concat(var.controller_names, var.worker_names, var.extra_names), count.index)}-kubeconfig"
 }
 

@@ -16,7 +16,16 @@
 # combination of all the resources' IDs, it can't be guessed and can only be
 # interpolated once the assets have all been created.
 output "id" {
-  value = "${sha1("${var.controller_names} ${var.worker_names} ${local_file.controller_kubeconfig.id} ${local_file.admin_kubeconfig.id} ${local_file.controller_manifest_etcd.id} ${local_file.controller_manifest_scheduler.id} ${local_file.controller_manifest_controller_manager.id}")}"
+  value = "${sha1("
+  ${local_file.kubelet_kubeconfig.*.id}
+  ${local_file.kube_proxy_kubeconfig.id}
+  ${local_file.kube_controller_manager_kubeconfig.id} 
+  ${local_file.admin_kubeconfig.id} 
+  ${local_file.controller_manifest_etcd.id} 
+  ${local_file.controller_manifest_apiserver.id} 
+  ${local_file.controller_manifest_scheduler.id} 
+  ${local_file.controller_manifest_controller_manager.id}
+  ")}"
 }
 
 output "install_id" {
@@ -24,8 +33,8 @@ output "install_id" {
 }
 
 # Output files
-output "controller_kubeconfig" {
-  value = "${data.template_file.controller_kubeconfig.*.rendered}"
+output "kubelet_kubeconfig" {
+  value = "${data.template_file.kubelet_kubeconfig.*.rendered}"
 }
 
 output "kube_proxy_kubeconfig" {
