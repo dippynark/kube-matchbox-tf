@@ -93,26 +93,26 @@ resource "local_file" "apiserver-crt" {
 
 # Kubelet
 resource "tls_private_key" "kubelet" {
-  count = "${length(var.controller_names) + length(var.worker_names)}"
+  count = "${length(var.controller_names) + length(var.worker_names) + length(var.extra_names)}"
 
   algorithm = "RSA"
   rsa_bits  = "2048"
 }
 
 resource "tls_cert_request" "kubelet" {
-  count = "${length(var.controller_names) + length(var.worker_names)}"
+  count = "${length(var.controller_names) + length(var.worker_names) + length(var.extra_names)}"
 
-  key_algorithm   = "${tls_private_key.kubelet.algorithm}"
-  private_key_pem = "${tls_private_key.kubelet.private_key_pem}"
+  key_algorithm   = "${element(tls_private_key.kubelet.*.algorithm, count.index)}"
+  private_key_pem = "${element(tls_private_key.kubelet.*.private_key_pem, count.index)}"
 
   subject {
-    common_name  = "system:node:${element(concat(var.controller_domains, var.worker_domains), count.index)}"
+    common_name  = "system:node:${element(concat(var.controller_domains, var.worker_domains, var.extra_domains), count.index)}"
     organization = "system:nodes"
   }
 }
 
 resource "tls_locally_signed_cert" "kubelet" {
-  count = "${length(var.controller_names) + length(var.worker_names)}"
+  count = "${length(var.controller_names) + length(var.worker_names) + length(var.extra_names)}"
 
   cert_request_pem = "${element(tls_cert_request.kubelet.*.cert_request_pem, count.index)}"
 
@@ -131,17 +131,17 @@ resource "tls_locally_signed_cert" "kubelet" {
 }
 
 resource "local_file" "kubelet-key" {
-  count = "${length(var.controller_names) + length(var.worker_names)}"
+  count = "${length(var.controller_names) + length(var.worker_names) + length(var.extra_names)}"
 
   content  = "${element(tls_private_key.kubelet.*.private_key_pem, count.index)}"
-  filename = "${var.assets_dir}/tls/${element(concat(var.controller_names, var.worker_names), count.index)}-kubelet.key"
+  filename = "${var.assets_dir}/tls/${element(concat(var.controller_names, var.worker_names, var.extra_names), count.index)}-kubelet.key"
 }
 
 resource "local_file" "kubelet-crt" {
-  count = "${length(var.controller_names) + length(var.worker_names)}"
+  count = "${length(var.controller_names) + length(var.worker_names) + length(var.extra_names)}"
 
   content  = "${element(tls_locally_signed_cert.kubelet.*.cert_pem, count.index)}"
-  filename = "${var.assets_dir}/tls/${element(concat(var.controller_names, var.worker_names), count.index)}-kubelet.crt"
+  filename = "${var.assets_dir}/tls/${element(concat(var.controller_names, var.worker_names, var.extra_names), count.index)}-kubelet.crt"
 }
 
 # Kube Proxy

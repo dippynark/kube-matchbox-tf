@@ -71,6 +71,14 @@ variable "worker_domains" {
   type = "list"
 }
 
+variable "extra_names" {
+  type = "list"
+}
+
+variable "extra_domains" {
+  type = "list"
+}
+
 # Assets
 variable "assets_dir" {
   description = "Path to a directory where generated assets should be placed (contains secrets)"

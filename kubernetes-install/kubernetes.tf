@@ -20,6 +20,8 @@ module "kubernetes" {
   worker_names       = "${var.worker_names}"
   worker_macs        = "${var.worker_macs}"
   worker_domains     = "${var.worker_domains}"
+  extra_names       = "${var.extra_names}"
+  extra_domains     = "${var.extra_domains}"
 
   # Assets
   assets_dir  = "${var.assets_dir}"
