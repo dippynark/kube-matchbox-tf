@@ -14,7 +14,6 @@ spec:
     command:
     - /hyperkube
     - apiserver
-    - --insecure-bind-address=127.0.0.1
     - --enable-admission-plugins=NodeRestriction,Initializers,NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota,DefaultTolerationSeconds
     - --service-cluster-ip-range=${service_cidr}
     - --service-account-key-file=/etc/kubernetes/tls/service-account.key
