@@ -5,6 +5,7 @@ resource "null_resource" "copy-config" {
   triggers {
     kubeconfig = "${module.kubernetes.controller_kubeconfig[count.index]}"
     kube_controller_manager_kubeconfig = "${module.kubernetes.kube_controller_manager_kubeconfig}"
+    kube_proxy_kubeconfig = "${module.kubernetes.kube_proxy_kubeconfig}"
     ca_cert = "${module.kubernetes.ca_cert}"
     id = "${module.kubernetes.install_id}"
   }

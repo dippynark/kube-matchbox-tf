@@ -34,7 +34,7 @@ data "template_file" "kube_proxy_kubeconfig" {
 }
 
 resource "local_file" "kube_proxy_kubeconfig" {
-  content  = "${data.template_file.controller_kubeconfig.rendered}"
+  content  = "${data.template_file.kube_proxy_kubeconfig.rendered}"
   filename = "${var.assets_dir}/controller/kube-proxy-kubeconfig"
 }
 
@@ -52,7 +52,7 @@ data "template_file" "kube_controller_manager_kubeconfig" {
 }
 
 resource "local_file" "kube_controller_manager_kubeconfig" {
-  content  = "${data.template_file.controller_kubeconfig.rendered}"
+  content  = "${data.template_file.kube_controller_manager_kubeconfig.rendered}"
   filename = "${var.assets_dir}/controller/kube-controller-manager-kubeconfig"
 }
 
