@@ -28,8 +28,8 @@ variable "container_images" {
   type        = "map"
 
   default = {
-    hyperkube                   = "gcr.io/google_containers/hyperkube:v1.11.0"
-    hyperkube_arm               = "gcr.io/google_containers/hyperkube-arm:v1.11.0"
+    hyperkube                   = "gcr.io/google_containers/hyperkube:v1.11.1"
+    hyperkube_arm               = "gcr.io/google_containers/hyperkube-arm:v1.11.1"
     etcd                        = "quay.io/coreos/etcd:v3.2.9"
     kubedns                     = "gcr.io/google_containers/k8s-dns-kube-dns-amd64:1.14.7"
     kubednsmasq                 = "gcr.io/google_containers/k8s-dns-dnsmasq-nanny-amd64:1.14.7"
