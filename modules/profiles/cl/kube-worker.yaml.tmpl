@@ -92,7 +92,9 @@ systemd:
           --hostname-override={{.domain_name}} \
           --node-labels=node-role.kubernetes.io/worker \
           --cluster_dns={{.k8s_dns_service_ip}} \
-          --cluster_domain=cluster.local
+          --cluster_domain=cluster.local \
+          --authorization-mode=Webhook \
+          --kube-reserved=cpu=100m,memory=1Gi
         ExecStop=-/usr/bin/rkt stop --uuid-file=/var/run/kubelet-pod.uuid
         Restart=always
         RestartSec=10
