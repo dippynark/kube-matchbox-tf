@@ -32,6 +32,11 @@ spec:
     - --v=${verbosity}
     - --kubelet-client-certificate=/etc/kubernetes/tls/apiserver.crt
     - --kubelet-client-key=/etc/kubernetes/tls/apiserver.key
+    - --proxy-client-key-file=/etc/kubernetes/tls/apiserver.key
+    - --proxy-client-cert-file=/etc/kubernetes/tls/apiserver.crt
+    - --requestheader-extra-headers-prefix=X-Remote-Extra-
+    - --requestheader-group-headers=X-Remote-Group
+    - --requestheader-username-headers=X-Remote-User
     ports:
     - containerPort: 8080
     - containerPort: 6443
