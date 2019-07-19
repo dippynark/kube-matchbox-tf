@@ -7,7 +7,6 @@ This project is for deploying [Container Linux][8] and [Kubernetes][9] to bare m
 - kube-scheduler
 - kube-controller-manager
 - kube-proxy
-- kube-dns (CoreDNS)
 - flannel
 
 ## Prerequisites
