@@ -88,7 +88,6 @@ systemd:
           --lock-file=/var/run/lock/kubelet.lock \
           --exit-on-lock-contention \
           --pod-manifest-path=/etc/kubernetes/manifests \
-          --allow-privileged \
           --hostname-override={{.domain_name}} \
           --node-labels=node-role.kubernetes.io/master \
           --cluster_dns={{.k8s_dns_service_ip}} \
