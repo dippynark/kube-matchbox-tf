@@ -1,3 +1,27 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kube-proxy
+  namespace: kube-system
+  labels:
+    addonmanager.kubernetes.io/mode: Reconcile
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: system:kube-proxy
+  labels:
+    addonmanager.kubernetes.io/mode: Reconcile
+subjects:
+  - kind: ServiceAccount
+    name: kube-proxy
+    namespace: kube-system
+roleRef:
+  kind: ClusterRole
+  name: system:node-proxier
+  apiGroup: rbac.authorization.k8s.io
+---
 apiVersion: "extensions/v1beta1"
 kind: DaemonSet
 metadata:
@@ -19,6 +43,7 @@ spec:
       annotations:
         scheduler.alpha.kubernetes.io/critical-pod: ""
     spec:
+      serviceAccountName: kube-proxy
       containers:
       - name: kube-proxy
         image: ${hyperkube_image}
@@ -78,6 +103,7 @@ spec:
       annotations:
         scheduler.alpha.kubernetes.io/critical-pod: ""
     spec:
+      serviceAccountName: kube-proxy
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -128,4 +154,3 @@ spec:
       - name: etc-kubernetes
         hostPath:
           path: /etc/kubernetes
-
