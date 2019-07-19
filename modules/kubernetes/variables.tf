@@ -31,8 +31,6 @@ variable "container_images" {
     hyperkube                   = "gcr.io/google_containers/hyperkube:v1.15.1"
     hyperkube_arm               = "gcr.io/google_containers/hyperkube-arm:v1.15.1"
     etcd                        = "quay.io/coreos/etcd:v3.3.10"
-    flannel                     = "quay.io/coreos/flannel:v0.11.0-amd64"
-    flannel_arm                 = "quay.io/coreos/flannel:v0.11.0-arm"
   }
 }
 

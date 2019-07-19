@@ -148,9 +148,6 @@ resource "template_dir" "install" {
     hyperkube_image                   = "${var.container_images["hyperkube"]}"
     hyperkube_arm_image               = "${var.container_images["hyperkube_arm"]}"
 
-    flannel_image                     = "${var.container_images["flannel"]}"
-    flannel_arm_image                 = "${var.container_images["flannel_arm"]}"
-
     istio_version                     = "${var.istio_version}"
     istio_namespace                   = "${var.istio_namespace}"
     # If there is only one master, standalone_master_domain will be set to its domain
