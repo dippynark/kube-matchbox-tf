@@ -8,9 +8,8 @@ This project is for deploying [Container Linux][8] and [Kubernetes][9] to bare m
 - kube-controller-manager
 - kube-dns
 - kube-proxy
-- kube-dashboard
 - heapster
-- calico (for pod-to-pod networking and network policy)
+- flannel
 - [update-operator][12] (for automated Container Linux updates)
 
 ## Prerequisites

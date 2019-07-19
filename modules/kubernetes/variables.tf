@@ -28,20 +28,12 @@ variable "container_images" {
   type        = "map"
 
   default = {
-    hyperkube                   = "gcr.io/google_containers/hyperkube:v1.13.1"
-    hyperkube_arm               = "gcr.io/google_containers/hyperkube-arm:v1.13.1"
-    etcd                        = "quay.io/coreos/etcd:v3.2.9"
-    kubedns                     = "gcr.io/google_containers/k8s-dns-kube-dns-amd64:1.14.7"
-    kubednsmasq                 = "gcr.io/google_containers/k8s-dns-dnsmasq-nanny-amd64:1.14.7"
-    kubedns_sidecar             = "gcr.io/google_containers/k8s-dns-sidecar-amd64:1.14.7"
-    kube_dashboard              = "gcr.io/google_containers/kubernetes-dashboard-amd64:v1.7.1"
-    coredns                     = "coredns/coredns:1.2.0"
-    flannel                     = "quay.io/coreos/flannel:v0.7.1-amd64"
-    flannel_arm                 = "quay.io/coreos/flannel:v0.7.1-arm"
-    heapster                    = "gcr.io/google_containers/heapster:v1.4.3"
-    heapster_nanny              = "gcr.io/google_containers/addon-resizer:1.7"
-    update_operator             = "quay.io/coreos/container-linux-update-operator:v0.6.0"
-    statsd_exporter             = "prom/statsd-exporter:v0.5.0"
+    hyperkube                   = "gcr.io/google_containers/hyperkube:v1.15.1"
+    hyperkube_arm               = "gcr.io/google_containers/hyperkube-arm:v1.15.1"
+    etcd                        = "quay.io/coreos/etcd:v3.3.10"
+    coredns                     = "coredns/coredns:1.5.2"
+    flannel                     = "quay.io/coreos/flannel:v0.11.0-amd64"
+    flannel_arm                 = "quay.io/coreos/flannel:v0.11.0-arm"
   }
 }
 

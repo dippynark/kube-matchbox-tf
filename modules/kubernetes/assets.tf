@@ -149,18 +149,9 @@ resource "template_dir" "install" {
     hyperkube_arm_image               = "${var.container_images["hyperkube_arm"]}"
 
     coredns_image                     = "${var.container_images["coredns"]}"
-
-    kube_dashboard_image              = "${var.container_images["kube_dashboard"]}"
-
-    heapster_image                    = "${var.container_images["heapster"]}"
-    heapster_nanny_image              = "${var.container_images["heapster_nanny"]}"
     
     flannel_image                     = "${var.container_images["flannel"]}"
     flannel_arm_image                 = "${var.container_images["flannel_arm"]}"
-
-    update_operator_image             = "${var.container_images["update_operator"]}"
-
-    statsd_exporter                   = "${var.container_images["statsd_exporter"]}"
 
     istio_version                     = "${var.istio_version}"
     istio_namespace                   = "${var.istio_namespace}"

@@ -13,7 +13,7 @@ spec:
     image: ${hyperkube_image}
     command:
     - /hyperkube
-    - scheduler
+    - kube-scheduler
     - --address=127.0.0.1
     - --leader-elect
     - --master=127.0.0.1:8080

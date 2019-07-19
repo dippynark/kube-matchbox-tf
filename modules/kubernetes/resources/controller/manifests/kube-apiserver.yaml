@@ -13,8 +13,7 @@ spec:
     image: ${hyperkube_image}
     command:
     - /hyperkube
-    - apiserver
-    - --enable-admission-plugins=NodeRestriction,Initializers,NamespaceLifecycle,LimitRanger,ServiceAccount,DefaultStorageClass,DefaultTolerationSeconds,MutatingAdmissionWebhook,ValidatingAdmissionWebhook,ResourceQuota
+    - kube-apiserver
     - --service-cluster-ip-range=${service_cidr}
     - --service-account-key-file=/etc/kubernetes/tls/service-account.key
     - --client-ca-file=/etc/kubernetes/tls/ca.crt

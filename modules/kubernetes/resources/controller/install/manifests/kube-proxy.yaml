@@ -24,9 +24,8 @@ spec:
         image: ${hyperkube_image}
         command:
         - /hyperkube
-        - proxy
+        - kube-proxy
         - --kubeconfig=/etc/kubernetes/kube-proxy-kubeconfig
-        - --proxy-mode=ipvs
         - --hostname-override=$(NODE_NAME)
         - --cluster-cidr=${cluster_cidr}
         env:
@@ -93,9 +92,8 @@ spec:
         image: ${hyperkube_arm_image}
         command:
         - /hyperkube
-        - proxy
+        - kube-proxy
         - --kubeconfig=/etc/kubernetes/kube-proxy-kubeconfig
-        - --proxy-mode=ipvs
         - --hostname-override=$(NODE_NAME)
         - --cluster-cidr=${cluster_cidr}
         env:
