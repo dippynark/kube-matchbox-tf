@@ -2,15 +2,13 @@
 
 This project is for deploying [Container Linux][8] and [Kubernetes][9] to bare metal environments using [matchbox][10] and [Terraform][1] and is inspired heavily by [munnerz/k8s-matchbox-tf][11]. The following components and add-ons are deployed with the cluster:
 
-- etcd (one instance per master)
+- etcd
 - kube-apiserver
 - kube-scheduler
 - kube-controller-manager
-- kube-dns
 - kube-proxy
-- heapster
+- kube-dns (CoreDNS)
 - flannel
-- [update-operator][12] (for automated Container Linux updates)
 
 ## Prerequisites
 
